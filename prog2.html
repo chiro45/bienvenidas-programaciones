@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Programación II — Bienvenidos/as</title>
+
+<!-- ============================================================
+     PRESENTACIÓN INTERACTIVA ESTILO GENIALLY (UTN)
+     Archivo único (HTML + CSS + JS). Para el recurso "Archivo"
+     de Moodle. Fuentes de Google si hay internet; si no, del sistema.
+
+     EDITAR:
+     - Menú principal: <section class="slide hub-slide"> (bombillo + 6 ramas)
+     - Cada rama abre su diapositiva (data-goto="N")
+     - Diapositivas de detalle: <section class="slide detail"> ...
+     - Colores: variables :root de abajo
+     ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* ---- Paleta tomada del Genially ---- */
+  --violet:#1A0D72;      /* títulos */
+  --navy:#0D4D72;        /* azul oscuro / subtítulos */
+  --blue:#147BB7;        /* azul UTN */
+  --blue-light:#75C3F0;  /* celeste */
+  --lavender:#CDC6F8;    /* lavanda (botones +) */
+  --lavender-soft:#ECE9FB;
+
+  --page:#F4F2FC;        /* fondo de página */
+  --card:#FFFFFF;
+  --ink:#2b3440;
+  --muted:#6b7684;
+  --pill:#EEF1F6;
+  --pill-line:#E4E8F0;
+  --line:#C9D3E2;        /* conectores punteados */
+
+  --display:"Quicksand", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body:"Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius:26px;
+  --shadow:0 20px 55px rgba(26,13,114,.14);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--body);color:var(--ink);
+  background:var(--page);
+  overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+
+/* ---- Círculos decorativos del fondo (como el Genially) ---- */
+.bg-deco{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-deco i{position:absolute;border-radius:50%;display:block}
+.d1{width:120px;height:120px;background:var(--navy);top:70px;left:60px}
+.d2{width:90px;height:90px;background:var(--blue);top:40px;right:120px}
+.d3{width:150px;height:150px;background:var(--blue-light);bottom:20px;right:40px}
+.d4{width:110px;height:110px;background:var(--blue);bottom:30px;left:30%}
+.d5{width:340px;height:340px;background:var(--lavender);opacity:.5;top:-120px;right:-80px}
+.d6{width:300px;height:300px;background:var(--lavender);opacity:.45;bottom:-120px;left:-90px}
+.d7{width:70px;height:70px;background:var(--lavender);bottom:120px;left:12%}
+
+/* ================= ESTRUCTURA ================= */
+.deck{position:relative;z-index:1;height:100dvh;display:grid;place-items:center;padding:18px}
+.card{
+  position:relative;width:min(1180px,95vw);height:min(760px,92dvh);
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.stage{position:relative;height:100%;width:100%}
+
+.slide{
+  position:absolute;inset:0;overflow-y:auto;
+  padding:clamp(22px,3.6vw,46px);
+  display:flex;flex-direction:column;
+  opacity:0;visibility:hidden;transform:translateX(28px);
+  transition:opacity .45s ease, transform .45s ease;
+}
+.slide.active{opacity:1;visibility:visible;transform:none;z-index:2}
+.slide.prev{transform:translateX(-28px)}
+
+/* ---- Tipografía ---- */
+h1{font-family:var(--display);font-weight:700;color:var(--violet);
+   font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.02;letter-spacing:-.01em;text-align:center}
+.subtitle{font-family:var(--display);font-weight:700;color:var(--navy);
+   font-size:clamp(1rem,2.2vw,1.5rem);text-align:center;margin-top:6px}
+h2{font-family:var(--display);font-weight:700;color:var(--violet);
+   font-size:clamp(1.6rem,3.4vw,2.5rem);line-height:1.1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);
+   font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+   color:var(--blue);background:var(--lavender-soft);padding:7px 14px;border-radius:999px;margin-bottom:16px}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue)}
+p{line-height:1.6;color:var(--muted)}
+
+/* ================= MENÚ / HUB ================= */
+.hub-slide{justify-content:space-between}
+.hub-head{flex:0 0 auto}
+.hub{position:relative;flex:1 1 auto;display:grid;
+     grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(10px,2vw,30px);
+     margin:8px 0;min-height:0}
+.hub-svg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+.hub-col{display:flex;flex-direction:column;justify-content:space-around;gap:14px;z-index:1;height:100%}
+.hub-col.left{align-items:flex-end}
+.hub-col.right{align-items:flex-start}
+
+.center-hub{z-index:1;display:grid;place-items:center}
+.bulb{
+  width:clamp(90px,11vw,140px);height:clamp(90px,11vw,140px);border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--blue-light), var(--blue) 75%);
+  display:grid;place-items:center;font-size:clamp(2.4rem,5vw,3.4rem);
+  box-shadow:0 12px 30px rgba(20,123,183,.4);color:#fff;
+}
+
+/* ---- Nodo (rama clickable) ---- */
+.node{
+  display:flex;align-items:center;gap:12px;cursor:pointer;border:none;
+  background:transparent;text-align:left;padding:6px;border-radius:16px;
+  transition:transform .18s ease;max-width:280px;
+}
+.hub-col.left .node{flex-direction:row-reverse;text-align:right}
+.node:hover{transform:translateY(-2px)}
+.node-icon{
+  flex:0 0 auto;width:56px;height:56px;border-radius:50%;background:var(--pill);
+  display:grid;place-items:center;font-size:1.6rem;border:2px solid transparent;
+  transition:all .18s ease;
+}
+.node:hover .node-icon{background:var(--lavender-soft);border-color:var(--blue-light);transform:scale(1.06)}
+.node-body{min-width:0}
+.node-q{font-family:var(--display);font-weight:700;color:var(--navy);font-size:1.02rem;line-height:1.15}
+.node-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.hub-col.left .node-chips{justify-content:flex-end}
+.chip{font-size:.78rem;font-weight:700;color:var(--ink);background:var(--pill);
+   border:1px solid var(--pill-line);border-radius:999px;padding:4px 11px}
+.chip.plus{background:var(--lavender);border-color:var(--lavender);color:var(--violet)}
+
+/* ---- Pie con marca UTN ---- */
+.hub-foot{flex:0 0 auto;text-align:center;margin-top:6px}
+.utn{font-family:var(--display);font-weight:700;color:var(--ink);font-size:1.5rem;letter-spacing:.05em}
+.utn small{display:block;font-size:.62rem;letter-spacing:.18em;color:var(--muted);font-weight:700}
+
+/* ================= DIAPOSITIVAS DE DETALLE ================= */
+.detail{justify-content:flex-start;gap:8px}
+.detail .top{display:flex;align-items:center;gap:16px;margin-bottom:6px}
+.detail .big-icon{width:64px;height:64px;flex:0 0 auto;border-radius:18px;
+   background:linear-gradient(150deg,var(--blue-light),var(--blue));color:#fff;
+   display:grid;place-items:center;font-size:2rem;box-shadow:0 10px 24px rgba(20,123,183,.32)}
+.detail p{font-size:1.05rem;max-width:60ch}
+.detail ul{list-style:none;display:grid;gap:12px;margin-top:14px}
+.detail li{display:flex;gap:12px;font-size:1.02rem;color:var(--ink);line-height:1.45}
+.detail li::before{content:"▹";color:var(--blue);font-weight:700}
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.tag{font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--violet);
+   background:var(--lavender-soft);border:1px solid var(--lavender);border-radius:12px;padding:9px 16px}
+.callout{margin-top:18px;padding:18px 20px;background:var(--lavender-soft);
+   border-left:4px solid var(--blue);border-radius:12px}
+.callout strong{color:var(--navy)}
+.back{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;
+   font-family:var(--display);font-weight:700;font-size:.95rem;cursor:pointer;
+   color:var(--blue);background:none;border:2px solid var(--blue);border-radius:999px;padding:9px 18px;transition:all .18s ease}
+.back:hover{background:var(--blue);color:#fff}
+
+/* ================= CONTROLES ================= */
+.progress{position:absolute;top:0;left:0;height:4px;z-index:30;
+   background:linear-gradient(90deg,var(--blue),var(--blue-light));width:0;transition:width .45s ease}
+
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:20;
+   width:46px;height:46px;border-radius:50%;border:2px solid var(--pill-line);
+   background:#fff;color:var(--navy);cursor:pointer;display:grid;place-items:center;
+   font-size:1.3rem;box-shadow:0 6px 16px rgba(0,0,0,.12);transition:all .18s ease}
+.nav-btn:hover{background:var(--blue);border-color:var(--blue);color:#fff;transform:translateY(-50%) scale(1.08)}
+.nav-btn:disabled{opacity:.3;cursor:default;transform:translateY(-50%)}
+.nav-btn.prev{left:-14px}
+.nav-btn.next{right:-14px}
+
+.bottombar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;
+   display:flex;align-items:center;gap:14px;padding:8px 16px;border-radius:999px;
+   background:#fff;border:1px solid var(--pill-line);box-shadow:0 6px 16px rgba(0,0,0,.1)}
+.dots{display:flex;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--pill-line);border:none;cursor:pointer;padding:0;transition:all .2s ease}
+.dot.active{background:var(--blue);width:24px;border-radius:999px}
+.counter{font-family:var(--display);font-weight:700;font-size:.8rem;color:var(--muted);min-width:42px;text-align:center}
+
+.topbar{position:absolute;top:12px;right:12px;z-index:20}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--pill-line);
+   background:#fff;color:var(--navy);cursor:pointer;display:grid;place-items:center;font-size:1.05rem;transition:all .18s ease}
+.icon-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+:focus-visible{outline:3px solid var(--blue-light);outline-offset:3px;border-radius:8px}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:820px){
+  .hub{grid-template-columns:1fr;gap:12px}
+  .hub-svg{display:none}
+  .center-hub{order:-1}
+  .bulb{width:76px;height:76px;font-size:2rem}
+  .hub-col{height:auto;align-items:stretch!important}
+  .hub-col.left .node,.hub-col.right .node{flex-direction:row;text-align:left;max-width:none;width:100%}
+  .hub-col.left .node-chips{justify-content:flex-start}
+  .node{background:var(--pill);}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:opacity .2s ease!important}
+  .slide{transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-deco" aria-hidden="true">
+  <i class="d5"></i><i class="d6"></i><i class="d1"></i><i class="d2"></i>
+  <i class="d3"></i><i class="d4"></i><i class="d7"></i>
+</div>
+
+<main class="deck">
+  <div class="card">
+    <div class="progress" id="progress"></div>
+    <div class="topbar"><button class="icon-btn" id="fsBtn" title="Pantalla completa" aria-label="Pantalla completa">⛶</button></div>
+
+    <div class="stage" id="stage">
+
+      <!-- ============ 0 · MENÚ (HUB) ============ -->
+      <section class="slide hub-slide active">
+        <div class="hub-head">
+          <h1>Programación II</h1>
+          <div class="subtitle">¡Bienvenidos/as!</div>
+        </div>
+
+        <div class="hub">
+          <svg class="hub-svg" id="hubSvg" aria-hidden="true">
+            <g id="hubLines" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round"></g>
+          </svg>
+
+          <div class="hub-col left">
+            <button class="node" data-goto="1">
+              <span class="node-icon">🗺️</span>
+              <span class="node-body"><span class="node-q">¿Qué vamos a aprender?</span>
+                <span class="node-chips"><span class="chip">Hoja de ruta</span></span></span>
+            </button>
+            <button class="node" data-goto="2">
+              <span class="node-icon">👥</span>
+              <span class="node-body"><span class="node-q">¿Nos presentamos?</span>
+                <span class="node-chips"><span class="chip">Presentación</span><span class="chip">Padlet</span></span></span>
+            </button>
+            <button class="node" data-goto="3">
+              <span class="node-icon">🖱️</span>
+              <span class="node-body"><span class="node-q">¿Cómo aprenderemos?</span>
+                <span class="node-chips"><span class="chip">Foros e Interacción</span></span></span>
+            </button>
+          </div>
+
+          <div class="center-hub"><div class="bulb">💡</div></div>
+
+          <div class="hub-col right">
+            <button class="node" data-goto="4">
+              <span class="node-icon">💻</span>
+              <span class="node-body"><span class="node-q">¿Qué material se utilizará?</span>
+                <span class="node-chips"><span class="chip">Bibliografía</span></span></span>
+            </button>
+            <button class="node" data-goto="5">
+              <span class="node-icon">👆</span>
+              <span class="node-body"><span class="node-q">¡Practicamos lo aprendido!</span>
+                <span class="node-chips"><span class="chip">Actividades</span><span class="chip">Tareas</span></span></span>
+            </button>
+            <button class="node" data-goto="6">
+              <span class="node-icon">🎓</span>
+              <span class="node-body"><span class="node-q">¿Cuánto aprendimos?</span>
+                <span class="node-chips"><span class="chip">Autoevaluaciones</span></span></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="hub-foot"><div class="utn">UTN<small>Universidad Tecnológica Nacional</small></div></div>
+      </section>
+
+      <!-- ============ 1 · HOJA DE RUTA ============ -->
+      <section class="slide detail">
+        <div class="top"><div class="big-icon">🗺️</div><div><div class="eyebrow">Hoja de ruta</div><h2>¿Qué vamos a aprender?</h2></div></div>
+        <p>Recorreremos los fundamentos de la programación estructurada, desde los primeros algoritmos hasta la resolución de problemas con código.</p>
+        <ul>
+          <li>Lógica y resolución de problemas con algoritmos.</li>
+          <li>Variables, tipos de datos y operadores.</li>
+          <li>Estructuras de control: condicionales y repetición.</li>
+          <li>Funciones, arreglos y estructuras de datos básicas.</li>
+        </ul>
+        <button class="back" data-goto="0">← Volver al menú</button>
+      </section>
+
+      <!-- ============ 2 · NOS PRESENTAMOS ============ -->
+      <section class="slide detail">
+        <div class="top"><div class="big-icon">👥</div><div><div class="eyebrow">Presentación · Padlet</div><h2>¿Nos presentamos?</h2></div></div>
+        <p>Antes de arrancar, nos conocemos. Contanos quién sos, qué esperás de la materia y qué experiencia previa tenés con la programación.</p>
+        <div class="callout"><strong>Actividad:</strong> sumá tu presentación en el mural colaborativo de Padlet del aula. Es breve y nos ayuda a organizar los grupos.</div>
+        <div class="tags"><span class="tag">Presentación docente</span><span class="tag">Mural en Padlet</span></div>
+        <button class="back" data-goto="0">← Volver al menú</button>
+      </section>
+
+      <!-- ============ 3 · CÓMO APRENDEREMOS ============ -->
+      <section class="slide detail">
+        <div class="top"><div class="big-icon">🖱️</div><div><div class="eyebrow">Foros e interacción</div><h2>¿Cómo aprenderemos?</h2></div></div>
+        <p>La cursada combina teoría, práctica guiada y trabajo autónomo. La interacción es clave: se aprende programando y compartiendo dudas.</p>
+        <ul>
+          <li>Clases teórico-prácticas con ejemplos resueltos.</li>
+          <li>Foros de consultas para despejar dudas entre clases.</li>
+          <li>Prácticas semanales con acompañamiento docente.</li>
+        </ul>
+        <button class="back" data-goto="0">← Volver al menú</button>
+      </section>
+
+      <!-- ============ 4 · MATERIAL / BIBLIOGRAFÍA ============ -->
+      <section class="slide detail">
+        <div class="top"><div class="big-icon">💻</div><div><div class="eyebrow">Bibliografía</div><h2>¿Qué material se utilizará?</h2></div></div>
+        <p>Todo el material está disponible en el aula virtual. La bibliografía combina apuntes de cátedra y textos de referencia.</p>
+        <ul>
+          <li>Apuntes y guías de la cátedra (PDF descargables).</li>
+          <li>Bibliografía obligatoria y complementaria.</li>
+          <li>Entorno de práctica y ejemplos de código.</li>
+        </ul>
+        <button class="back" data-goto="0">← Volver al menú</button>
+      </section>
+
+      <!-- ============ 5 · PRACTICAMOS ============ -->
+      <section class="slide detail">
+        <div class="top"><div class="big-icon">👆</div><div><div class="eyebrow">Actividades · Tareas</div><h2>¡Practicamos lo aprendido!</h2></div></div>
+        <p>Cada unidad tiene actividades para afianzar los conceptos y tareas entregables que se corrigen con devolución.</p>
+        <div class="tags"><span class="tag">Actividades de práctica</span><span class="tag">Tareas entregables</span></div>
+        <div class="callout"><strong>Recordá:</strong> las entregas tienen fecha límite en el aula virtual. Programar seguido es la mejor forma de avanzar.</div>
+        <button class="back" data-goto="0">← Volver al menú</button>
+      </section>
+
+      <!-- ============ 6 · AUTOEVALUACIONES ============ -->
+      <section class="slide detail">
+        <div class="top"><div class="big-icon">🎓</div><div><div class="eyebrow">Autoevaluaciones</div><h2>¿Cuánto aprendimos?</h2></div></div>
+        <p>Al cerrar cada unidad vas a poder medir tu progreso con autoevaluaciones. Sirven para detectar qué reforzar antes de seguir.</p>
+        <ul>
+          <li>Cuestionarios breves de opción múltiple.</li>
+          <li>Resultados con retroalimentación inmediata.</li>
+          <li>Intentos ilimitados: son para aprender, no para calificar.</li>
+        </ul>
+        <button class="back" data-goto="0">← Volver al menú</button>
+      </section>
+
+    </div>
+
+    <button class="nav-btn prev" id="prevBtn" aria-label="Anterior">‹</button>
+    <button class="nav-btn next" id="nextBtn" aria-label="Siguiente">›</button>
+    <div class="bottombar"><div class="dots" id="dots"></div><span class="counter" id="counter"></span></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var slides  = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var stage   = document.getElementById('stage');
+  var dotsWrap= document.getElementById('dots');
+  var counter = document.getElementById('counter');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var progress= document.getElementById('progress');
+  var current = 0;
+
+  slides.forEach(function(_,i){
+    var d=document.createElement('button');
+    d.className='dot'; d.setAttribute('aria-label','Ir a la diapositiva '+(i+1));
+    d.addEventListener('click',function(){go(i);});
+    dotsWrap.appendChild(d);
+  });
+  var dots=Array.prototype.slice.call(dotsWrap.children);
+
+  function render(){
+    slides.forEach(function(s,i){
+      s.classList.remove('active','prev');
+      if(i===current) s.classList.add('active');
+      else if(i<current) s.classList.add('prev');
+    });
+    dots.forEach(function(d,i){d.classList.toggle('active',i===current);});
+    counter.textContent=(current+1)+' / '+slides.length;
+    prevBtn.disabled = current===0;
+    nextBtn.disabled = current===slides.length-1;
+    progress.style.width = (current/(slides.length-1)*100)+'%';
+    var act=slides[current]; if(act) act.scrollTop=0;
+  }
+  function go(i){ if(i<0||i>=slides.length) return; current=i; render(); }
+  function next(){go(current+1);}
+  function prev(){go(current-1);}
+
+  prevBtn.addEventListener('click',prev);
+  nextBtn.addEventListener('click',next);
+
+  /* Ramas del menú y botones "volver" */
+  document.querySelectorAll('[data-goto]').forEach(function(el){
+    el.addEventListener('click',function(){ go(parseInt(el.getAttribute('data-goto'),10)); });
+  });
+
+  /* Teclado */
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='Home'){e.preventDefault();go(0);}
+    else if(e.key==='End'){e.preventDefault();go(slides.length-1);}
+  });
+
+  /* Swipe táctil */
+  var sx=0,sy=0;
+  stage.addEventListener('touchstart',function(e){sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY;},{passive:true});
+  stage.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)){ dx<0?next():prev(); }
+  },{passive:true});
+
+  /* Pantalla completa */
+  var fsBtn=document.getElementById('fsBtn');
+  fsBtn.addEventListener('click',function(){
+    var el=document.documentElement;
+    if(!document.fullscreenElement){ (el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el); }
+    else { (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  });
+
+  /* Conectores punteados: se dibujan según la posición real de cada ícono */
+  var SVGNS='http://www.w3.org/2000/svg';
+  var hub=document.querySelector('.hub');
+  var hubSvg=document.getElementById('hubSvg');
+  var hubLines=document.getElementById('hubLines');
+  var bulb=document.querySelector('.bulb');
+  function layoutLines(){
+    if(!hub||!hubSvg||!bulb) return;
+    if(getComputedStyle(hubSvg).display==='none'){ hubLines.innerHTML=''; return; }
+    var hr=hub.getBoundingClientRect();
+    if(hr.width===0) return;
+    hubSvg.setAttribute('viewBox','0 0 '+hr.width+' '+hr.height);
+    var br=bulb.getBoundingClientRect();
+    var cx=br.left+br.width/2-hr.left, cy=br.top+br.height/2-hr.top;
+    hubLines.innerHTML='';
+    hub.querySelectorAll('.node-icon').forEach(function(ic){
+      var r=ic.getBoundingClientRect();
+      var ln=document.createElementNS(SVGNS,'line');
+      ln.setAttribute('x1',cx); ln.setAttribute('y1',cy);
+      ln.setAttribute('x2',r.left+r.width/2-hr.left);
+      ln.setAttribute('y2',r.top+r.height/2-hr.top);
+      hubLines.appendChild(ln);
+    });
+  }
+  window.addEventListener('resize',layoutLines);
+  if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(layoutLines); }
+  setTimeout(layoutLines,300);
+
+  render();
+  layoutLines();
+})();
+</script>
+</body>
+</html>
